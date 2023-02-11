@@ -95,15 +95,15 @@ def scan_xss_with_wordlist(url):
         line = file.readlines()
         count = 0
     for index in line:
-        js_script = index
+        payload = index
         payload = index
         is_vulnerable = False
 
         for form in forms:
             form_details = get_form_details(form)
             content = submit_form(
-                form_details, url, js_script).content.decode()
-            if js_script in content:
+                form_details, url, payload).content.decode()
+            if payload in content:
                 count += 1
                 print(f"[+] {count} XSS Detected on {url}")
                 print(f'PAYLOAD: {index}')
@@ -115,10 +115,10 @@ def scan_xss_with_wordlist(url):
 
 
 def scan_xss(url):
-    js_script = "<Script>confirm('hi')</scripT>"
+    payload = "<Script>confirm('hi')</scripT>"
     is_vulnerable = False
 
-    app_banner(url, js_script)
+    app_banner(url, payload)
     if wordlist:
         scan_xss_with_wordlist(url)
         exit(1)
@@ -128,8 +128,8 @@ def scan_xss(url):
 
     for form in forms:
         form_details = get_form_details(form)
-        content = submit_form(form_details, url, js_script).content.decode()
-        if js_script in content:
+        content = submit_form(form_details, url, payload).content.decode()
+        if payload in content:
             print(f"[+] XSS Detected on {url}")
             print(f"[*] Form details:")
             is_vulnerable = True
